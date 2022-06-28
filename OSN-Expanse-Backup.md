@@ -46,11 +46,12 @@ First, log in to Expanse using ssh or by using the [Expanse Portal Login](https:
 
 I needed to do `module spider rclone` to figure out whether rclone is installed.  
 
-To load rclone, do:
+As of 6/28/2022, To load rclone, do:
 ```
 module load cpu/0.15.4
 module load rclone/1.56.0
 ```
+Note:  You should do a `module spider rclone` to check for the latest version.
 
 Configure rclone.  First, find the file location:
 ```
@@ -73,9 +74,9 @@ secret_access_key = <secret key here>
 endpoint = https://renc.osn.xsede.org
 no_check_bucket = true
 ```
-Note:  Do not put things like keys and passwords in documents. If you have read/write access, then find the keys on the [Storage Portal](https://portal.osn.xsede.org). And yes, the square brackets are necessary.
+Note:  Do not put things like keys and passwords in documents. If you have read/write access, then find the keys on the [Storage Portal](https://portal.osn.xsede.org). And yes, the square brackets are necessary.  (I shouldn't list our actual bucket name in public documentation either, but since it is a private bucket for now, what the hey.  For the near term, I want to make it easy for our group to cut and paste.)
 
-Command are in the form:
+Commands are in the form:
 ```
 rclone [command] OyBcSt:/ees210015-bucket01
 ```
@@ -94,7 +95,7 @@ rclone ls OyBcSt:/ees210015-bucket01
 ```
 Check the GUI too. [OSN Storage Portal](https://portal.osn.xsede.org)
 
-When I do the `ls`, I get the following. The numbers on the left are file sizes.
+When I do the `ls`, I get the following, which lists my various test uploads. The numbers on the left are file sizes.
 ```
 (base) [llowe@login02 ~]$ rclone ls OyBcSt:/ees210015-bucket01
    129634 YT Thumbnail Requesting Consultation.png
@@ -109,15 +110,31 @@ When I do the `ls`, I get the following. The numbers on the left are file sizes.
 To do this, you must be a 'data manager'.  On the OSN Storage Portal, you would see something like
 ..* EES210015_Lisa_Lowe (manage)
 
-Click 'manage'.  If you have an XSEDE allocation, all the members in the project given access to OSN should be listed, along with a red button to Remove. (Check access by going to the [XSEDE User Portal](https://portal.xsede.org/group/xup/add-remove-user).  Open a help ticket with XSEDE/OSN if the members are not listed.)
+Click 'manage'.  If you have an XSEDE allocation, all the members in the project who were given access to OSN should be listed, along with a red button to Remove. (Check access by going to the [XSEDE User Portal](https://portal.xsede.org/group/xup/add-remove-user).  Open a [help ticket](help@xsede.org) with XSEDE/OSN if the members are not listed.)
 
-If you click the link for 'Add a user to this project', your options are limited to a pre-populated dropdown menu.  If a member is already listed in the table, they will not appear in the dropdown menu; if you need to change the role of a member, you have to remove them first.  Once removed, you can find them in the dropdown and choose the new role.
+If you click the link for 'Add a user to this project', your options are limited to a pre-populated dropdown menu.  If a member is already listed in the table, they will not appear in the dropdown menu; if you need to change the role of a member, you have to click the red button to Remove them first.  Once removed, you can find them in the dropdown and choose the new role.
+
+# Example
+
+Instead of typing the bucket name each time, set an environment variable, e.g.,
 
 ```
 export BUCKET="OyBcSt:/ees210015-bucket01"
-rclone copy test $BUCKET/test
-rclone copy ROMS_Results $BUCKET/harisree/ROMS_Results
 ```
+
+I suggest doing a test to convince yourself that rclone does what you want before copying TB of data.  Do a dry run:
+```
+rclone copy --dry-run test $BUCKET/test
+```
+
+I'm new to rclone, so I wanted a more 'tangible' test.  To do that, I made a directory called **test**, with a file in it called **hello.txt**, and did these examples:
+```
+rclone copy test $BUCKET/test
+rclone copy test $BUCKET
+```
+The first case will take the contents of the **test** *directory* and put it in your bucket so it also looks like you have a **test** directory, i.e., `$BUCKET/test/hello.txt`.  The second case will copy the files within your **test** directory and put them straight in the bucket, such that the bucket will have `$BUCKET/hello.txt`.
+
+
 
 Backing up Hari's data
 ```
@@ -126,4 +143,9 @@ module load rclone/1.56.0
 cd /expanse/lustre/projects/ncs124/harisree
 export BUCKET="OyBcSt:/ees210015-bucket01"
 rclone copy ROMS_Results $BUCKET/harisree/ROMS_Results
+```
+
+To let rclone go in the background and continue if you log out, use `nohup`...(although I'm not sure this actually worked...either it didn't work or Hari's running something new.)
+```
+nohup rclone copy ROMS_Results $BUCKET/harisree/ROMS_Results &
 ```
