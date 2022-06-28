@@ -118,3 +118,12 @@ export BUCKET="OyBcSt:/ees210015-bucket01"
 rclone copy test $BUCKET/test
 rclone copy ROMS_Results $BUCKET/harisree/ROMS_Results
 ```
+
+Backing up Hari's data
+```
+module load cpu/0.15.4
+module load rclone/1.56.0
+cd /expanse/lustre/projects/ncs124/harisree
+export BUCKET="OyBcSt:/ees210015-bucket01"
+rclone copy ROMS_Results $BUCKET/harisree/ROMS_Results
+```
