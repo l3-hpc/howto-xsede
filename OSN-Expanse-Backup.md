@@ -108,7 +108,8 @@ When I do the `ls`, I get the following, which lists my various test uploads. Th
 ## Adding users
 
 To do this, you must be a 'data manager'.  On the OSN Storage Portal, you would see something like
-..* EES210015_Lisa_Lowe (manage)
+
+**EES210015_Lisa_Lowe (manage)**
 
 Click 'manage'.  If you have an XSEDE allocation, all the members in the project who were given access to OSN should be listed, along with a red button to Remove. (Check access by going to the [XSEDE User Portal](https://portal.xsede.org/group/xup/add-remove-user).  Open a [help ticket](help@xsede.org) with XSEDE/OSN if the members are not listed.)
 
