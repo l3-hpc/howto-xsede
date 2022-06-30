@@ -85,14 +85,14 @@ To make it easier to follow the directions by cut/paste, define an environment v
 ```
 export BUCKET=CoolStuff:/XYZ123456-bucket01
 ```
-Do a test...check what is in the bucket:
+Do a test...check what is in the bucket.
 ```
 rclone ls $BUCKET 
 ```
-Create a text file and copy it to the bucket
+Create a text file and copy it to the bucket.
 ```
 echo "hello!" > hello.txt
-rclone copy hello.txt 
+rclone copy hello.txt $BUCKET
 ```
 Check is it really there.
 ```
