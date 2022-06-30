@@ -16,7 +16,7 @@ delivery of large data sets to researchers.
 ## Introducing the OSN Storage Portal
 Go to the OSN Storage Portal, [https://portal.osn.xsede.org](https://portal.osn.xsede.org).
 
-Sign in with your XSEDE login and accept the DUO push.
+Clicking 'Login Using Your Home Instution' should take you to CILogon for XSEDE. Sign in with your XSEDE login and accept the DUO push.
 
 The OSN home page lists your buckets and their access key and secret access key.
 
