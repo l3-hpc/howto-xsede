@@ -18,13 +18,13 @@ Go to the OSN Storage Portal, [https://portal.osn.xsede.org](https://portal.osn.
 
 Sign in with your XSEDE login and accept the DUO push.
 
-The home page lists your buckets and their access key and secret access key.
+The OSN home page lists your buckets and their access key and secret access key.
 
-The naming convention is location/allocation, and the terminology is endpoint/bucket.  Our bucket is:
+The naming convention is location/allocation, and the terminology is endpoint/bucket.  Our example bucket name is:
 ```
-https://renc.osn.xsede.org/ees210015-bucket01
+https://renc.osn.xsede.org/XYZ123415-bucket01
 ```
-The location is the pod nearest you.  Ours is at RENCI.
+Your location may be different and is named for the pod nearest you.  This one is at RENCI.
 
 Do a quick test by uploading a file through the OSN GUI interface.
 - Click the link for the bucket
@@ -60,12 +60,12 @@ rclone config file
 The result is the following, which means, the file rclone.conf does not exist, but when it does, it should be in that path.
 ```
 Configuration file doesn't exist, but rclone will use this path:
-/home/llowe/.config/rclone/rclone.conf
+/home/$USER/.config/rclone/rclone.conf
 ```
 
 Edit the file rclone.conf.
 ```
-[OyBcSt]
+[CoolStuff]
 type = s3
 provider = Ceph
 access_key_id = <access key here>
@@ -73,30 +73,35 @@ secret_access_key = <secret key here>
 endpoint = https://renc.osn.xsede.org
 no_check_bucket = true
 ```
-Note:  Do not put things like keys and passwords in documents. If you have read/write access, then find the keys on the [Storage Portal](https://portal.osn.xsede.org). And yes, the square brackets are necessary.
+The first line is whatever you want. Pick something that describes your project. Yes, the square brackets are necessary.
+- Note:  Do not put things like keys and passwords in documents. If you have read/write access, then find the keys on the [Storage Portal](https://portal.osn.xsede.org).  If not, ask your data manager to make the keys available to you in a secure fashion. 
 
 Command are in the form:
 ```
-rclone [command] OyBcSt:/ees210015-bucket01
+rclone [command] CoolStuff:/XYZ123456-bucket01
+```
+To make it easier to follow the directions by cut/paste, define an environment variable with your bucket name.
+```
+export BUCKET=CoolStuff:/XYZ123456-bucket01
 ```
 Do a test...check what is in the bucket:
 ```
-rclone ls OyBcSt:/ees210015-bucket01
+rclone ls $BUCKET 
 ```
 Create a text file and copy it to the bucket
 ```
 echo "hello!" > hello.txt
-rclone copy hello.txt OyBcSt:/ees210015-bucket01
+rclone copy hello.txt 
 ```
 Check is it really there.
 ```
-rclone ls OyBcSt:/ees210015-bucket01
+rclone ls $BUCKET
 ```
 Check the GUI too. [OSN Storage Portal](https://portal.osn.xsede.org)
 
-When I do the `ls`, I get the following. The numbers on the left are file sizes.
+When I do the `ls`, I get the following. It lists all my 'test' uploads.  The numbers on the left are file sizes.
 ```
-(base) [llowe@login02 ~]$ rclone ls OyBcSt:/ees210015-bucket01
+(base) [llowe@login02 ~]$ rclone ls $BUCKET 
    129634 YT Thumbnail Requesting Consultation.png
         7 hello.txt
         7 hello2.txt
@@ -107,16 +112,34 @@ When I do the `ls`, I get the following. The numbers on the left are file sizes.
 ## Adding users
 
 To do this, you must be a 'data manager'.  On the OSN Storage Portal, you would see something like
-..* EES210015_Lisa_Lowe (manage)
+* XYZ123456_Firstname_Lastname (manage)
 
-Click 'manage'.  If you have an XSEDE allocation, all the members in the project given access to OSN should be listed, along with a red button to Remove. (Check access by going to the [XSEDE User Portal](https://portal.xsede.org/group/xup/add-remove-user).  Open a help ticket with XSEDE/OSN if the members are not listed.)
+Click 'manage'.  If you have an XSEDE allocation, all the members in the project given access to OSN should be listed, along with a red button to Remove. (Check access by going to the [XSEDE User Portal](https://portal.xsede.org/group/xup/add-remove-user).  Open a help ticket with XSEDE/OSN at help@xsede.org if the members are not listed.)
 
-If you click the link for 'Add a user to this project', your options are limited to a pre-populated dropdown menu.  If a member is already listed in the table, they will not appear in the dropdown menu; if you need to change the role of a member, you have to remove them first.  Once removed, you can find them in the dropdown and choose the new role.
+If you click the link for 'Add a user to this project', your options are limited to a pre-populated dropdown menu.  If a member is already listed in the table, they will not appear in the dropdown menu; if you need to change the role of a member, you have to click the red Remove button to remove them first.  Once removed, you can find them in the dropdown and choose the new role.
 
+## Example
+For this example, I want to copy the results from a hydrodynamics model that I ran on Expanse.  The group for my XSEDE allocation is `xyz123`. 
+
+First, set the environment:
 ```
 module load cpu/0.15.4
 module load rclone/1.56.0
-export BUCKET="OyBcSt:/ees210015-bucket01"
-cd /expanse/lustre/projects/ncs124/harisree
-rclone copy ROMS_Results $BUCKET/harisree/ROMS_Results
+export BUCKET="CoolStuff:/XYZ123456-bucket01"
 ```
+My model runs are in the scratch space, so I go there:
+```
+cd /expanse/lustre/projects/xyz123/$USER
+```
+My output is in the directory 'HydroFiles'. To copy the directory to OSN, I do:
+```
+rclone copy HydroFiles $BUCKET/HydroFiles
+```
+
+To keep a transfer running in the background, you can use `nohup`:
+```
+nohup rclone copy HydroFiles $BUCKET/HydroFiles & 
+```
+
+I heard `screen` might be better.  I never tried that.  When I do, I'll add some instructions here.
+
