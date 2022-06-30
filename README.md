@@ -2,5 +2,5 @@
 Documentation and notes for using XSEDE resources
 
 Contents
-- [OSN-Expanse-Backup](OSN-Expanse-Backup.md)
-
+- [OSN](OSN)
+-- [OSN-Expanse-Backup](OSN/OSN-Expanse-Backup.md)
