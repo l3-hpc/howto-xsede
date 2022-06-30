@@ -1,6 +1,6 @@
 # How to back up data from Expanse to OSN
 
-Here are the basics of OSN, and how to transfer data from Expanse to OSN using rclone.
+Here are the basics of OSN and how to transfer data from Expanse to OSN using rclone.
 
 ## OSN - Open Storage Network
 From OSN User Guide:
@@ -51,6 +51,7 @@ To load rclone, do:
 module load cpu/0.15.4
 module load rclone/1.56.0
 ```
+Those were the latest modules as of 6/22/2022.  Do `module spider rclone` to check for newer versions. Use the newest ones. 
 
 Configure rclone.  First, find the file location:
 ```
