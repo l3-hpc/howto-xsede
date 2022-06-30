@@ -1,5 +1,5 @@
 # howto-xsede
-Documentation and notes for using XSEDE resources
+Notes and Quick-Starts for using XSEDE resources
 
 Contents
 - [OSN](OSN)
